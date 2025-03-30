@@ -1,0 +1,17 @@
+[33mcommit 506e0035ddfc60aa1d9ded36eddf43686bfd2c73[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Balaji P <balaji2k423@gmail.com>
+Date:   Mon Mar 31 04:07:04 2025 +0530
+
+    Remove .env files from Git history
+
+[33mcommit 96e2e7f95b6f61f1b040b8e583bac997750eb2ab[m
+Author: Balaji P <balaji2k423@gmail.com>
+Date:   Mon Mar 31 04:01:51 2025 +0530
+
+    second commit
+
+[33mcommit f4c08f9eb97f2b478de30818bb4def54b4b36bb3[m
+Author: Balaji P <balaji2k423@gmail.com>
+Date:   Mon Mar 24 09:15:33 2025 +0530
+
+    first commit
