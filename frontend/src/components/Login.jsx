@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Spline from "@splinetool/react-spline";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,13 +20,29 @@ const Login = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const saveUserData = (userData) => {
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
   const handleGoogleSuccess = async (response) => {
     try {
       setIsLoading(true);
+      const userInfo = jwtDecode(response.credential);
+      
+      const userData = {
+        name: userInfo.name,
+        email: userInfo.email,
+        imageUrl: userInfo.picture,
+      };
+
       const res = await axios.post("http://localhost:5000/api/auth/google", {
         token: response.credential,
       });
+
+      // Save user data and token
+      saveUserData(userData);
       localStorage.setItem("token", res.data.token);
+
       navigate(res.data.redirectUrl || "/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
@@ -43,11 +60,28 @@ const Login = () => {
     try {
       setIsLoading(true);
       const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+      
+      // Fetch user details after successful login
+      const userRes = await axios.get("http://localhost:5000/api/user/profile", {
+        headers: { Authorization: `Bearer ${res.data.token}` }
+      });
+
+      const userData = {
+        name: userRes.data.name,
+        email: userRes.data.email,
+        imageUrl: userRes.data.profileImage || '/default-avatar.png'
+      };
+
+      // Save user data
+      saveUserData(userData);
+
+      // Save token based on remember me
       if (rememberMe) {
         localStorage.setItem("token", res.data.token);
       } else {
         sessionStorage.setItem("token", res.data.token);
       }
+
       navigate(res.data.redirectUrl || "/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
@@ -70,7 +104,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-6 py-12 relative overflow-hidden">
-      {/* 🟣 Animated Bubbles */}
+      {/* Rest of the component remains the same */}
       <motion.div 
         className="absolute top-5 left-5 w-16 h-16 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 opacity-75"
         animate={{ y: [0, -10, 10, 0] }}
@@ -171,7 +205,7 @@ const Login = () => {
 
         {/* Right Side - Spline 3D Animation */}
         <div className="hidden md:block md:w-1/2 relative overflow-hidden" style={{ backgroundColor: "#d4d4e5" }}>
-        <div className="absolute bottom-0 left-0 right-0 h-15 z-10" style={{ backgroundColor: "#d4d4e5" }}></div>
+          <div className="absolute bottom-0 left-0 right-0 h-15 z-10" style={{ backgroundColor: "#d4d4e5" }}></div>
           <div className="absolute inset-0">
             <Spline scene="https://prod.spline.design/gKiJvDcwelUiyNF4/scene.splinecode" onLoad={handleSplineLoad} />
           </div>

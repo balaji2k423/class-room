@@ -1,65 +1,66 @@
-import React, { useState } from "react";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const Navbar = ({ 
+  isSidebarOpen, 
+  setIsSidebarOpen, 
+  isMobile, 
+  sidebarWidth 
+}) => {
+  const topNavItems = [
+    { label: "Home", link: "#" },
+    { label: "About", link: "#" },
+    { label: "Services", link: "#" },
+    { label: "Contact", link: "#" },
+  ];
 
   return (
-    <nav className="bg-gray-900 text-white fixed top-0 left-0 w-full z-50 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="text-2xl font-bold">MyApp</div>
-
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-6">
-            <a href="#" className="hover:text-blue-400 transition duration-300">
-              Home
-            </a>
-            <a href="#" className="hover:text-blue-400 transition duration-300">
-              About
-            </a>
-            <a href="#" className="hover:text-blue-400 transition duration-300">
-              Services
-            </a>
-            <a href="#" className="hover:text-blue-400 transition duration-300">
-              Contact
-            </a>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white focus:outline-none"
+    <div
+      className="transition-all duration-300 flex-1"
+      style={{
+        marginLeft: `${sidebarWidth}px`,
+      }}
+    >
+      <nav className="bg-gray-900 text-white w-full z-40 shadow-md px-6 py-4 flex justify-between items-center fixed">
+        <div className="flex items-center">
+          {isMobile && (
+            <button 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="mr-4 text-white"
+              aria-label="Toggle Sidebar"
             >
-              {isOpen ? (
-                <span className="text-xl">&#10006;</span> // Close Icon
-              ) : (
-                <span className="text-xl">&#9776;</span> // Hamburger Icon
-              )}
+              <FontAwesomeIcon
+                icon={isSidebarOpen ? faTimes : faBars}
+                className="text-xl"
+              />
             </button>
+          )}
+          <div className="text-2xl font-bold">MyApp</div>
+        </div>
+        
+        {!isMobile && (
+          <div className="hidden md:flex space-x-6">
+            {topNavItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.link}
+                className="hover:text-blue-400 transition duration-300 no-underline text-white"
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
-        </div>
-      </div>
+        )}
+      </nav>
 
-      {/* Mobile Dropdown Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-gray-800 py-4 space-y-4 text-center transition-all duration-300 ease-in-out">
-          <a href="#" className="block hover:text-blue-400 transition duration-300">
-            Home
-          </a>
-          <a href="#" className="block hover:text-blue-400 transition duration-300">
-            About
-          </a>
-          <a href="#" className="block hover:text-blue-400 transition duration-300">
-            Services
-          </a>
-          <a href="#" className="block hover:text-blue-400 transition duration-300">
-            Contact
-          </a>
-        </div>
-      )}
-    </nav>
+      {/* Page Content */}
+      <div className="pt-16 p-6 flex-1 bg-gray-100">
+        {/* Your page content goes here */}
+        <h1 className="text-2xl font-bold mb-4">Welcome to the Dashboard</h1>
+        <p>This is your content area. The navigation is now fully responsive and adaptive.</p>
+      </div>
+    </div>
   );
 };
 

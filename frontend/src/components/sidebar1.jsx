@@ -303,7 +303,6 @@ const AdaptiveSidebarNavbar = () => {
     setErrorMessage("");
     
     try {
-      // Get token from localStorage first, then sessionStorage
       const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       
       if (!token) {
@@ -311,9 +310,6 @@ const AdaptiveSidebarNavbar = () => {
         setIsSubmitting(false);
         return;
       }
-      
-      // Make sure token is correctly formatted
-      const formattedToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
       
       // Log request details for debugging
       console.log("Creating classroom with name:", className.trim());
@@ -324,7 +320,7 @@ const AdaptiveSidebarNavbar = () => {
         { name: className.trim() },
         {
           headers: {
-            'Authorization': formattedToken,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }
@@ -340,9 +336,6 @@ const AdaptiveSidebarNavbar = () => {
       // Show success notification
       alert("Classroom created successfully!");
       
-      // Refresh the page or update classroom list
-      window.location.reload();
-      
     } catch (error) {
       console.error("Error creating classroom:", error);
       
@@ -354,17 +347,9 @@ const AdaptiveSidebarNavbar = () => {
         console.error("Error response status:", error.response.status);
         console.error("Error response headers:", error.response.headers);
         
-        if (error.response.status === 401) {
-          // Handle authentication error
-          setErrorMessage("Authentication failed. Please log out and log in again.");
-          
-          // Optionally force logout on authentication failure
-          // handleLogout();
-        } else {
-          setErrorMessage(error.response.data?.message || 
-                         `Server error: ${error.response.status}` || 
-                         "Failed to create classroom");
-        }
+        setErrorMessage(error.response.data?.message || 
+                       `Server error: ${error.response.status}` || 
+                       "Failed to create classroom");
       } else if (error.request) {
         // The request was made but no response was received
         console.error("No response received:", error.request);
@@ -670,15 +655,14 @@ const AdaptiveSidebarNavbar = () => {
               </div>
 
               {/* Add Button - Only visible for admin */}
-              {/* Add Button - Only visible for admin */}
               {isAdmin && (
-                <button 
-                  onClick={() => setShowAddClassModal(true)}
-                  className="p-2.5 rounded-full transition-colors shadow-lg text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                >
-                  <Plus className="h-5 w-5" />
-                </button>
-              )}
+  <button 
+    onClick={() => setShowAddClassModal(true)}
+    className="p-2.5 rounded-full transition-colors text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+  >
+    <Plus className="h-5 w-5" />
+  </button>
+)}
 
               {/* Profile */}
               <div className="relative">
