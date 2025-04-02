@@ -58,12 +58,7 @@ JWT_SECRET=your_secret_key
 VITE_BACKEND_URL=http://localhost:5000
 ```
 
-## 🤝 Contributing
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-branch`
-3. Commit your changes: `git commit -m 'Add feature'`
-4. Push to the branch: `git push origin feature-branch`
-5. Open a Pull Request 🚀
+
 
 ## 📜 License
 This project is open-source and available under the **MIT License**.
